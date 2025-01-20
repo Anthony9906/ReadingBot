@@ -1,0 +1,76 @@
+.app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+    }
+
+    .content-container {
+      display: flex;
+      flex: 1;
+    }
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.main-container {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+  gap: 20px;
+  min-width: 900px; /* MainContent最小宽度 + Sidebar宽度 + gap + padding */
+  margin: 0 auto; /* 居中显示 */
+  max-width: 1440px; /* 可选：设置最大宽度 */
+}
+
+.content-area {
+  flex: 1;
+  min-width: 520px; /* MainContent最小宽度 */
+  max-width: calc(100% - 380px); /* 100% - (Sidebar宽度 + gap) */
+}
+
+/* 响应式布局 */
+@media (max-width: 900px) {
+  .main-container {
+    flex-direction: column;
+    min-width: 520px; /* 等于MainContent最小宽度 */
+    padding: 10px; /* 减小padding */
+  }
+
+  .content-area {
+    max-width: 100%; /* 允许占满全宽 */
+  }
+}
+
+/* 处理超小屏幕 */
+@media (max-width: 540px) {
+  .main-container {
+    min-width: 100%; /* 完全自适应 */
+  }
+
+  .content-area {
+    min-width: 100%; /* 完全自适应 */
+  }
+}
