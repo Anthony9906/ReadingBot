@@ -34,7 +34,9 @@ function StoryModal({ story, userId, onClose, userLexile}) {
               <h3>Key Vocabulary</h3>
               <ul className="vocabulary-list">
                 {story.vocabulary.map((word, index) => (
-                  <li key={index}>{word}</li>
+                  <li key={index}>
+                    {word.word}: <span className="description">{word.description}</span>
+                  </li>
                 ))}
               </ul>
             </div>

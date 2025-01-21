@@ -57,11 +57,14 @@
 
 .story-text {
   margin-bottom: 30px;
-  line-height: 1.6;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: #333;
 }
 
 .story-text p {
   margin-bottom: 15px;
+  text-align: justify;
 }
 
 .vocabulary-section,
@@ -89,7 +92,16 @@
   background-color: #f8f9fa;
   padding: 5px 10px;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
+  font-weight: bolder;
+  color: #6A5AE0;
+}
+
+.vocabulary-list li .description {
+  font-style: italic;
+  font-size: smaller;
+  font-weight: normal;
+  color: #333;
 }
 
 .questions-list {

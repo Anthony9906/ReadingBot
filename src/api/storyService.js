@@ -30,12 +30,12 @@ export async function generateAndSaveStory(userId, lexile) {
     if (lexileNum > 500) complexity = 'intermediate';
     if (lexileNum > 1000) complexity = 'advanced';
 
-    const prompt = `Generate a story suitable for readers at ${lexile} Lexile level. The story should be engaging and include:
+    const prompt = `Generate a story suitable for a k12 readers at ${lexile} Lexile level. The story should be engaging and include:
     - A clear beginning, middle, and end
-    - Age-appropriate vocabulary
+    - Age-appropriate vocabulary with description
     - Proper paragraph structure
     - A meaningful message or lesson about family, animals, friendship, and love
-    - Length should be appropriate for the Lexile level(less than 100 single words for simple, less than 200 single words for intermediate, less than 300 single words for advanced)
+    - Story length should be fit for the complexity: ${complexity}, (less than 100 single words for simple, less than 160 single words for intermediate, less than 240 single words for advanced)
 
     After generating the story, create 5 comprehension questions based on the story. For each question, provide:
     - 1 correct answer
@@ -45,9 +45,22 @@ export async function generateAndSaveStory(userId, lexile) {
     {
       "story": {
         "title": "Story Title",
-        "content": "Story content with proper paragraphs"
+        "content": "Story content with proper paragraphs for beginning, middle and end"
       },
-      "vocabulary": ["word1", "word2", "word3"]
+      "vocabulary": [
+        {
+          "word": "word 1",
+          "description": "description for word 1"
+        },
+        {
+          "word": "word 2",
+          "description": "description for word 2"
+        },
+        {
+          "word": "word 3",
+          "description": "description for word 3"
+        }
+      ]
       "questions": [
         {
           "question": "Question 1?",
@@ -78,11 +91,11 @@ export async function generateAndSaveStory(userId, lexile) {
     }`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are a professional educational content creator. Always return responses in clean JSON format without any markdown formatting or code block markers."
+          content: "You are a professional educational content creator for k12. Always return responses in clean JSON format without any markdown formatting or code block markers."
         },
         {
           role: "user",
