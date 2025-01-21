@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Quiz from './Quiz';
 import './StoryModal.css';
 
-function StoryModal({ story, user, onClose }) {
+function StoryModal({ story, userId, onClose, userLexile}) {
   const [showQuiz, setShowQuiz] = useState(false);
 
   if (!story) return null;
@@ -45,12 +45,13 @@ function StoryModal({ story, user, onClose }) {
       {showQuiz && (
         <Quiz 
           story={story} 
-          userId={user.id}
+          userId={userId}
           onClose={() => setShowQuiz(false)}
           onComplete={(score) => {
             console.log('Quiz completed with score:', score);
             // 这里可以添加保存分数的逻辑
           }}
+          userLexile={userLexile}
         />
       )}
     </div>

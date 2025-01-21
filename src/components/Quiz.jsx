@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Quiz.css';
 import { supabase } from '../lib/supabase'; // 确保导入 Supabase 客户端
 
-function Quiz({ story, userId, onClose, onComplete }) {
+function Quiz({ story, userId, onClose, onComplete, userLexile, setUserLexile}) {
   const [currentAnswers, setCurrentAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -42,6 +42,24 @@ function Quiz({ story, userId, onClose, onComplete }) {
     setScore(finalScore);
     setSubmitted(true);
 
+    // Check conditions for Lexile increase
+    const { data: quizData, error: quizError } = await supabase
+    .from('quiz_records')
+    .select('score')
+    .eq('user_id', userId)
+    .eq('story_id', story.id);
+
+    if (quizError) {
+        console.error('Error fetching quiz records:', quizError);
+        return;
+    }
+
+    const previousScores = quizData.map(record => record.score);
+    const bestScore = previousScores.length > 0 ? Math.max(...previousScores) : null;
+    // Debugging logs
+    console.log('Best Score:', bestScore);
+    console.log('Final Score:', finalScore);
+
     // 保存 Quiz 记录到 Supabase
     const { error } = await supabase
       .from('quiz_records')
@@ -58,6 +76,36 @@ function Quiz({ story, userId, onClose, onComplete }) {
       console.error('Error saving quiz record:', error);
     } else {
       console.log('Quiz record saved successfully');
+      
+      // Condition 1: User has never completed the quiz for this story or best score < 80%
+      const condition1 = bestScore === null || bestScore < 80;
+      // Condition 2: Current score >= 80%
+      const condition2 = finalScore >= 80;
+
+      console.log('Condition 1:', condition1);
+      console.log('Condition 2:', condition2);
+
+      if (condition1 && condition2) {
+        // Update Lexile value
+        const currentLexile = parseInt(userLexile, 10); // Convert userLexile to an integer
+
+        let newLexile = isNaN(currentLexile) ? 100 : currentLexile + 10; // Increase Lexile by 10, default to 10 if NaN
+        newLexile = newLexile + "L";
+        console.log('New Lexile:' + newLexile);
+
+        const { error: lexileError } = await supabase
+          .from('user_profiles')
+          .update({ lexile: newLexile })
+          .eq('id', userId);
+
+        if (lexileError) {
+          console.error('Error updating Lexile value:', lexileError);
+        } else {
+          console.log('Lexile value updated successfully');
+        }
+      } else {
+        console.log('Do not meet require for Lexile up');
+      }
     }
 
     if (onComplete) {

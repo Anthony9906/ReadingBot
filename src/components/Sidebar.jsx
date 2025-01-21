@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getUserProfile } from '../api/authService';
 import './Sidebar.css';
+import { FaStar, FaBook, FaRegFileAlt } from 'react-icons/fa';
 
 function Sidebar({ user }) {
   const [lexile, setLexile] = useState('100L');
@@ -21,30 +22,36 @@ function Sidebar({ user }) {
   };
 
   return (
-    <aside className="sidebar">
-      <div className="stats-card">
-        <div className="lexile-ar-container">
-          <div className="lexile-card">
-            <p className="lexile-value">{lexile}</p>
-            <p className="lexile-label">Lexile</p>
-          </div>
-          <div className="ar-card">
-            <p className="ar-value">1.0</p>
-            <p className="ar-label">AR</p>
-          </div>
+    <div className="sidebar">
+      <div className="stats-container">
+        <div className="stat-item">
+          <FaStar className="stat-icon" />
+          <div className="stat-label">POINTS</div>
+          <div className="stat-value">178</div>
         </div>
-        <p className="stories-read">
-          You have read a total <span className="stories-count">24</span> stories
-          this month!
-        </p>
-        <div className="points-progress">
-          <div className="progress-circle">
-            <span className="points-value">37/50</span>
-          </div>
-          <p className="points-label">Points</p>
+        <div className="stat-item">
+          <FaBook className="stat-icon" />
+          <div className="stat-label">GLOSSARY</div>
+          <div className="stat-value">45</div>
+        </div>
+        <div className="stat-item">
+          <FaRegFileAlt className="stat-icon" />
+          <div className="stat-label">WORDS</div>
+          <div className="stat-value">521</div>
         </div>
       </div>
-    </aside>
+      <div className="lexile-container">
+        <div className="lexile-value">{lexile}</div>
+        <div className="lexile-label">Lexile</div>
+      </div>
+      <div className="ar-container">
+        <div className="ar-value">2.3</div>
+        <div className="ar-label">AR</div>
+      </div>
+      <div className="story-count">
+        <p>You have read a total <span className="highlight">24 stories</span> this month!</p>
+      </div>
+    </div>
   );
 }
 

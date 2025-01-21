@@ -35,7 +35,7 @@ export async function generateAndSaveStory(userId, lexile) {
     - Age-appropriate vocabulary
     - Proper paragraph structure
     - A meaningful message or lesson about family, animals, friendship, and love
-    - Length should be appropriate for the Lexile level(no more than 100 words for simple, no more than 200 words for intermediate, no more than 300 words for advanced)
+    - Length should be appropriate for the Lexile level(less than 100 single words for simple, less than 200 single words for intermediate, less than 300 single words for advanced)
 
     After generating the story, create 5 comprehension questions based on the story. For each question, provide:
     - 1 correct answer
@@ -89,8 +89,8 @@ export async function generateAndSaveStory(userId, lexile) {
           content: prompt
         }
       ],
-      temperature: 1,
-      max_tokens: 3000,
+      temperature: 1.2,
+      max_tokens: 5000,
     });
 
     // 清理返回的内容，移除可能的 markdown 标记
