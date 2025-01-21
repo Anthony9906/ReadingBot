@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
-import { signOut, updateUserNickname } from '../api/authService';
+import React, { useState, useEffect } from 'react';
+import { signOut, updateUserNickname, getUserProfile } from '../api/authService';
 import { FaUserCircle } from 'react-icons/fa';
 import './Header.css';
 
 function Header({ user }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [nickname, setNickname] = useState(user.user_metadata?.nickname || 'Username');
+  const [nickname, setNickname] = useState('Username');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    try {
+      const profile = await getUserProfile(user.id);
+      if (profile?.username) {
+        setNickname(profile.username);
+      } else if (user.user_metadata?.nickname) {
+        setNickname(user.user_metadata.nickname);
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignOut = async () => {
     try {
@@ -23,8 +43,14 @@ function Header({ user }) {
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating nickname:', error);
+      // 可以添加错误提示
+      alert('Failed to update nickname. Please try again.');
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <header className="header">
@@ -41,6 +67,8 @@ function Header({ user }) {
               className="nickname-input"
               autoFocus
               placeholder="Enter nickname"
+              minLength={2}
+              maxLength={20}
             />
             <button type="submit" className="save-button">Save</button>
             <button 

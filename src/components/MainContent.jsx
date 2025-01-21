@@ -1,77 +1,124 @@
 import React, { useState, useEffect } from 'react';
-import './MainContent.css';
-import StoryModal from './StoryModal';
 import { generateAndSaveStory, getUserStories } from '../api/storyService';
+import { getUserProfile } from '../api/authService';
+import StoryModal from './StoryModal';
+import { format } from 'date-fns';
+import './MainContent.css';
 
-function MainContent({ user }) {  // 添加 user prop
-  const [story, setStory] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [savedStories, setSavedStories] = useState([]);
+function MainContent({ user }) {
+  const [currentStory, setCurrentStory] = useState(null);
+  const [recentStories, setRecentStories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    loadSavedStories();
+    loadUserProfile();
+    loadRecentStories();
   }, []);
 
-  const loadSavedStories = async () => {
+  const loadUserProfile = async () => {
     try {
-      const stories = await getUserStories(user.id);  // 使用 user.id
-      setSavedStories(stories);
+      const profile = await getUserProfile(user.id);
+      setUserProfile(profile);
     } catch (error) {
-      console.error('Error loading stories:', error);
+      console.error('Error loading user profile:', error);
+      setUserProfile({
+        id: user.id,
+        username: 'Username',
+        lexile: '100L'
+      });
+    }
+  };
+
+  const loadRecentStories = async () => {
+    try {
+      const stories = await getUserStories(user.id);
+      setRecentStories(stories.slice(0, 5)); // 只获取最近5个故事
+    } catch (error) {
+      console.error('Error loading recent stories:', error);
     }
   };
 
   const handleReadNew = async () => {
+    const lexile = userProfile?.lexile || '100L';
+    
+    setLoading(true);
     try {
-      setIsLoading(true);
-      const newStory = await generateAndSaveStory(user.id);  // 使用 user.id
-      setStory(newStory[0]);
-      setIsModalOpen(true);
-      loadSavedStories(); // 重新加载故事列表
+      const story = await generateAndSaveStory(user.id, lexile);
+      setCurrentStory(story);
+      setShowModal(true);
+      loadRecentStories(); // 重新加载故事列表
     } catch (error) {
       console.error('Error generating story:', error);
-      alert('Failed to generate story. Please try again later.');
+      alert('Failed to generate story. Please try again.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
+  const handleStoryClick = (story) => {
+    setCurrentStory(story);
+    setShowModal(true);
+  };
+
   return (
-    <main className="main-content">
-      <div className="start-reading-card">
-        <h2>Start Reading</h2>
-        <p>AI read a story for you and level up your lexile</p>
+    <div className="main-content">
+      <div className="content-header">
+        <h2>Your Reading</h2>
         <button 
-          className="read-new-button" 
-          onClick={handleReadNew}
-          disabled={isLoading}
+          onClick={handleReadNew} 
+          className="read-new-button"
+          disabled={loading}
         >
-          {isLoading ? 'Generating Story...' : 'Read New'}
+          {loading ? 'Generating...' : 'Read New'}
         </button>
       </div>
-      {isLoading && (
-        <div className="loading-overlay">
-          <div className="loading-spinner"></div>
-          <p>Generating your story...</p>
+      
+      {loading && (
+        <div className="loading">
+          Generating a story at your reading level ({userProfile?.lexile || '100L'})...
         </div>
       )}
-      {isModalOpen && (
-        <StoryModal story={story} onClose={() => setIsModalOpen(false)} />
-      )}
-      <div className="readings-section">
-        <h2>Your Stories</h2>
-        {savedStories.map((story) => (
-          <div key={story.id} className="reading-card">
-            <div className="reading-card-content">
-              <h3>{story.title}</h3>
-              <p>Created at: {new Date(story.created_at).toLocaleDateString()}</p>
+
+      <div className="recent-stories">
+        <h3>Recent Stories</h3>
+        <div className="stories-grid">
+          {recentStories.map((story) => (
+            <div 
+              key={story.id} 
+              className="story-card"
+              onClick={() => handleStoryClick(story)}
+            >
+              <h4 className="story-title">{story.title}</h4>
+              <div className="story-info">
+                <span className="lexile-badge">
+                  {story.lexile_level}
+                </span>
+                <span className="vocab-count">
+                  {story.vocabulary.length} words
+                </span>
+                <span className="creation-date">
+                  {format(new Date(story.created_at), 'MMM d, yyyy')}
+                </span>
+              </div>
             </div>
-            <span className="arrow-icon">&gt;</span>
-          </div>
-        ))}
+          ))}
+          {recentStories.length === 0 && (
+            <div className="no-stories">
+              No stories yet. Click "Read New" to generate your first story!
+            </div>
+          )}
+        </div>
       </div>
-    </main>
+
+      {showModal && (
+        <StoryModal 
+          story={currentStory} 
+          onClose={() => setShowModal(false)} 
+        />
+      )}
+    </div>
   );
 }
 
