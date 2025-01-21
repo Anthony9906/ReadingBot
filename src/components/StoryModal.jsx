@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Quiz from './Quiz';
 import './StoryModal.css';
 
-function StoryModal({ story, userId, onClose, userLexile}) {
+function StoryModal({ story, userId, onClose, userLexile }) {
   const [showQuiz, setShowQuiz] = useState(false);
 
   if (!story) return null;
@@ -11,13 +11,14 @@ function StoryModal({ story, userId, onClose, userLexile}) {
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>{story.title}</h2>
+          <h2 className="story-title">{story.title}</h2>
+          <span className="lexile-badge">{story.lexile_level}</span>
           <div className="modal-actions">
             <button 
               className="take-quiz-button"
-              onClick={() => setShowQuiz(true)}
+              onClick={() => setShowQuiz(prev => !prev)}
             >
-              Take Quiz
+              {showQuiz ? 'Hide Quiz' : 'Take Quiz'}
             </button>
             <button className="close-button" onClick={onClose}>&times;</button>
           </div>
@@ -41,21 +42,23 @@ function StoryModal({ story, userId, onClose, userLexile}) {
               </ul>
             </div>
           )}
+
+          {showQuiz && (
+            <div className="quiz-container">
+              <Quiz 
+                story={story} 
+                userId={userId}
+                onClose={() => setShowQuiz(false)}
+                onComplete={(score) => {
+                  console.log('Quiz completed with score:', score);
+                  // 这里可以添加保存分数的逻辑
+                }}
+                userLexile={userLexile}
+              />
+            </div>
+          )}
         </div>
       </div>
-
-      {showQuiz && (
-        <Quiz 
-          story={story} 
-          userId={userId}
-          onClose={() => setShowQuiz(false)}
-          onComplete={(score) => {
-            console.log('Quiz completed with score:', score);
-            // 这里可以添加保存分数的逻辑
-          }}
-          userLexile={userLexile}
-        />
-      )}
     </div>
   );
 }

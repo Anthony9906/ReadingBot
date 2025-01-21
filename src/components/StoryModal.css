@@ -148,3 +148,20 @@
 .take-quiz-button:hover {
   background-color: #218838;
 }
+
+.quiz-container {
+  margin-top: 20px;
+  background-color: #f1ecfb;
+  border-radius: 8px;
+}
+
+.story-title {
+  display: inline;
+  margin-right: 10px;
+}
+
+.lexile-value {
+  font-size: 14px;
+  color: #6A5AE0;
+  font-weight: bold;
+}

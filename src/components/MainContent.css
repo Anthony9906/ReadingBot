@@ -40,14 +40,15 @@
 }
 
 .read-new-button:disabled {
-  background-color: #ccc;
+  background-color: rgb(0 0 0 / .1);
+  color: #bca3ff;
   cursor: not-allowed;
 }
 
 .loading {
   text-align: center;
-  padding: 20px;
-  color: #666;
+  padding: 10px;
+  color: #ecd0ff;
 }
 
 .recent-stories {

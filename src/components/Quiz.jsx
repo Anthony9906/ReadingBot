@@ -117,14 +117,14 @@ function Quiz({ story, userId, onClose, onComplete, userLexile, setUserLexile}) 
     <div className="quiz-overlay">
       <div className="quiz-container">
         <div className="quiz-header">
-          <h2>Reading Comprehension Quiz</h2>
+          <h2>Reading Quiz</h2>
           <button className="close-button" onClick={onClose}>&times;</button>
         </div>
 
         <div className="quiz-content">
           {story.questions.map((question, index) => (
             <div key={index} className="question-container">
-              <p className="question-text">{question.question}</p>
+              <p className="question-text">{index+1}. {question.question}</p>
               <div className="options-container">
                 {[question.correctAnswer, ...question.wrongAnswers].map((option, idx) => (
                   <label
