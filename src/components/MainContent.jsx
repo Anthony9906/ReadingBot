@@ -13,9 +13,13 @@ function MainContent({ user }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    if (!user || !user.id) {
+      console.error('User object is invalid or does not contain an id:', user);
+      return; // 退出组件或显示错误信息
+    }
     loadUserProfile();
     loadRecentStories();
-  }, []);
+  }, [user]);
 
   const loadUserProfile = async () => {
     try {
@@ -112,9 +116,10 @@ function MainContent({ user }) {
         </div>
       </div>
 
-      {showModal && (
+      {showModal && currentStory && currentStory.questions && currentStory.questions.length > 0 && (
         <StoryModal 
           story={currentStory} 
+          user={user}
           onClose={() => setShowModal(false)} 
         />
       )}

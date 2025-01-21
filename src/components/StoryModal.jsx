@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Quiz from './Quiz';
 import './StoryModal.css';
 
-function StoryModal({ story, onClose }) {
+function StoryModal({ story, user, onClose }) {
+  const [showQuiz, setShowQuiz] = useState(false);
+
   if (!story) return null;
 
   return (
@@ -9,7 +12,15 @@ function StoryModal({ story, onClose }) {
       <div className="modal-content">
         <div className="modal-header">
           <h2>{story.title}</h2>
-          <button className="close-button" onClick={onClose}>&times;</button>
+          <div className="modal-actions">
+            <button 
+              className="take-quiz-button"
+              onClick={() => setShowQuiz(true)}
+            >
+              Take Quiz
+            </button>
+            <button className="close-button" onClick={onClose}>&times;</button>
+          </div>
         </div>
         <div className="modal-body">
           <div className="story-text">
@@ -28,22 +39,20 @@ function StoryModal({ story, onClose }) {
               </ul>
             </div>
           )}
-
-          {story.questions && story.questions.length > 0 && (
-            <div className="questions-section">
-              <h3>Comprehension Questions</h3>
-              <div className="questions-list">
-                {story.questions.map((qa, index) => (
-                  <div key={index} className="question-item">
-                    <p className="question">Q: {qa.question}</p>
-                    <p className="answer">A: {qa.answer}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {showQuiz && (
+        <Quiz 
+          story={story} 
+          userId={user.id}
+          onClose={() => setShowQuiz(false)}
+          onComplete={(score) => {
+            console.log('Quiz completed with score:', score);
+            // 这里可以添加保存分数的逻辑
+          }}
+        />
+      )}
     </div>
   );
 }

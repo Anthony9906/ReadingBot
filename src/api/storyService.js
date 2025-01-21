@@ -30,23 +30,50 @@ export async function generateAndSaveStory(userId, lexile) {
     if (lexileNum > 500) complexity = 'intermediate';
     if (lexileNum > 1000) complexity = 'advanced';
 
-    const prompt = `Generate a ${complexity} level English story suitable for readers at ${lexile} Lexile level. 
-    The story should be engaging and include:
+    const prompt = `Generate a story suitable for readers at ${lexile} Lexile level. The story should be engaging and include:
     - A clear beginning, middle, and end
-    - 3 or 5 Age-appropriate vocabulary
+    - Age-appropriate vocabulary
     - Proper paragraph structure
     - A meaningful message or lesson about family, animals, friendship, and love
-    - Length should be appropriate for the Lexile level(no more than 100 words for simple, 200 words for intermediate, 300 words for advanced)
-    - 5 questions and answers for the story
+    - Length should be appropriate for the Lexile level(no more than 100 words for simple, no more than 200 words for intermediate, no more than 300 words for advanced)
 
-    Return the story in the following JSON format (without any markdown code block markers):
+    After generating the story, create 5 comprehension questions based on the story. For each question, provide:
+    - 1 correct answer
+    - 2 plausible wrong answers
+
+    Return the story and questions in the following JSON format (without any markdown code block markers):
     {
-      "title": "Story Title",
-      "content": "Story content with proper paragraphs",
-      "vocabulary": ["word1", "word2", "word3"],
+      "story": {
+        "title": "Story Title",
+        "content": "Story content with proper paragraphs"
+      },
+      "vocabulary": ["word1", "word2", "word3"]
       "questions": [
-        {"question": "Comprehension question 1?", "answer": "Answer 1"},
-        {"question": "Comprehension question 2?", "answer": "Answer 2"}
+        {
+          "question": "Question 1?",
+          "correctAnswer": "Correct answer 1",
+          "wrongAnswers": ["Wrong answer 1", "Wrong answer 2"]
+        },
+        {
+          "question": "Question 2?",
+          "correctAnswer": "Correct answer 2",
+          "wrongAnswers": ["Wrong answer 3", "Wrong answer 4"]
+        },
+        {
+          "question": "Question 3?",
+          "correctAnswer": "Correct answer 3",
+          "wrongAnswers": ["Wrong answer 5", "Wrong answer 6"]
+        },
+        {
+          "question": "Question 4?",
+          "correctAnswer": "Correct answer 4",
+          "wrongAnswers": ["Wrong answer 7", "Wrong answer 8"]
+        },
+        {
+          "question": "Question 5?",
+          "correctAnswer": "Correct answer 5",
+          "wrongAnswers": ["Wrong answer 9", "Wrong answer 10"]
+        }
       ]
     }`;
 
@@ -62,7 +89,7 @@ export async function generateAndSaveStory(userId, lexile) {
           content: prompt
         }
       ],
-      temperature: 0.7,
+      temperature: 1,
       max_tokens: 3000,
     });
 
@@ -85,8 +112,8 @@ export async function generateAndSaveStory(userId, lexile) {
       .insert([
         {
           user_id: userId,
-          title: storyData.title,
-          content: storyData.content,
+          title: storyData.story.title,
+          content: storyData.story.content,
           vocabulary: storyData.vocabulary,
           questions: storyData.questions,
           lexile_level: lexile,
