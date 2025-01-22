@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Quiz.css';
 import { supabase } from '../lib/supabase'; // 确保导入 Supabase 客户端
 
@@ -6,6 +6,7 @@ function Quiz({ story, userId, onClose, onComplete, userLexile, setUserLexile}) 
   const [currentAnswers, setCurrentAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const quizRef = useRef(null); // Create a ref for the quiz section
 
   useEffect(() => {
     // 初始化答案状态

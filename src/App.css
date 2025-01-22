@@ -11,11 +11,11 @@
     }
 
 .App {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: #6A5AE0;
+  background: linear-gradient(135deg, #6A5AE0 0%, #A77BFF 100%);
+  height: -webkit-fill-available;
 }
 
 body {
@@ -25,6 +25,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 .loading-screen {

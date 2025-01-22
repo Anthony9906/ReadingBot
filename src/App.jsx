@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainContent from './components/MainContent';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
 import Auth from './components/Auth';
 import { getCurrentUser } from './api/authService';
+import AllStories from './components/AllStories';
+import Loading from './components/Loading';
 import './App.css';
 
 function App() {
@@ -11,6 +12,12 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const loadData = async () => {
+      // Simulate a delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setLoading(false); // Set loading to false after data is loaded
+    };
+    loadData();
     checkUser();
   }, []);
 
@@ -26,7 +33,11 @@ function App() {
   }
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return (
+      <Router>
+        <Loading />
+      </Router>
+    );
   }
 
   if (!user) {
@@ -34,13 +45,12 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Header user={user} />
-      <div className="main-container">
-        <MainContent user={user} />
-        <Sidebar user={user} />
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainContent user={user} />} />
+        <Route path="/all-stories" element={<AllStories userId={user?.id} />} />
+      </Routes>
+    </Router>
   );
 }
 

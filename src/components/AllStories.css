@@ -1,0 +1,99 @@
+.all-stories {
+  padding: 20px; /* Consistent padding */
+  background-color: #6A5AE0; /* Match the background color of MainContent */
+  height: -webkit-fill-available;
+}
+
+.all-stories h2 {
+    color: #fff;
+    padding: 20px 10px;
+}
+
+.all-stories .modal-content h2 {
+    color: #333;
+    padding: 20px 10px;
+}
+
+.stories-grid {
+  display: flex; /* Use flexbox for layout */
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  gap: 10px; /* Space between story cards */
+}
+
+.story-card {
+  background-color: white; /* Card background */
+  color: #333; /* Text color */
+  padding: 15px; /* Padding inside the card */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: transform 0.2s; /* Animation for hover effect */
+  width: calc(50% - 10px); /* Set width to 50% minus half the gap */
+  box-sizing: border-box; /* Include padding and border in width */
+}
+
+.story-card:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+.story-title {
+  font-size: 18px; /* Title font size */
+  margin: 0; /* Remove default margin */
+}
+
+.story-info {
+  justify-content: space-between; /* Space between info items */
+  font-size: 12px; /* Info font size */
+}
+
+.pagination {
+  margin-top: 20px; /* Space above pagination */
+  display: flex;
+  justify-content: space-between; /* Space between buttons */
+} 
+
+.pagination button {
+    padding: 6px;
+    width: 80px;
+}
+
+.back-button {
+  background-color: #6A5AE0; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 15px; /* Padding for the button */
+  margin-bottom: 20px; /* Space below the button */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.back-button:hover {
+  background-color: #5a4bcf; /* Darker shade on hover */
+}
+
+.back-icon {
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 26px; /* Adjust size of the icon */
+  color: #fff; /* Color of the icon */
+  margin-right: 20px; /* Space between icon and title */
+}
+
+.back-icon:hover {
+  color: #e2cbff; /* Darker shade on hover */
+}
+
+@media (max-width: 768px) {
+  .story-card {
+    width: calc(100% - 10px); /* Full width on smaller screens */
+  }
+}
+
+.header-container {
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 20px; /* Space below the header */
+}
+
+.all-stories h2 {
+  color: #fff; /* Title color */
+  margin: 0; /* Remove default margin */
+}
